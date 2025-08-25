@@ -36,9 +36,9 @@ There are two ways to use this software. The direct download is recommended for 
 ### Option 1: Direct Download (Recommended)
 This is the easiest way to run the application without installing Python or any dependencies.
 
-1.  Go to the `dist/run_app` folder in this repository.
-2.  Download the `run_app.exe` file.
-3.  Double-click the downloaded file to run the PL Analyzer.
+1.  Go to the [**Releases Page**](https://github.com/nikodemsokolowski/PL-temperature_and_power_Analyzer/releases).
+2.  Under the latest release (e.g., `v1.0`), click on `PL_Analyzer.exe` to download it.
+3.  Double-click the downloaded file to run the application.
 
 ### Option 2: Run from Source Code
 This option is for developers or users who want to modify the code.

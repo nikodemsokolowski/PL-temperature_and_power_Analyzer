@@ -28,24 +28,33 @@ The core analysis feature allows for robust power-law fitting on a log-log scale
     * Export processed spectra (Energy vs. Counts) to a tab-separated file.
     * Export integrated intensity vs. power data for a specific series, ready for external plotting or analysis.
 
-## 🚀 Getting Started
 
-You can run the application from the source code.
+## 🚀 Getting Started & Installation
 
-### Prerequisites
+There are two ways to use this software. The direct download is recommended for most users.
 
+### Option 1: Direct Download (Recommended)
+This is the easiest way to run the application without installing Python or any dependencies.
+
+1.  Go to the `dist/run_app` folder in this repository.
+2.  Download the `run_app.exe` file.
+3.  Double-click the downloaded file to run the PL Analyzer.
+
+### Option 2: Run from Source Code
+This option is for developers or users who want to modify the code.
+
+**Prerequisites:**
 * Python 3.8 or newer
-* The required Python packages listed in `requirements.txt`
+* Git
 
-### Installation & Running from Source
-
+**Installation Steps:**
 1.  **Clone the repository:**
     ```bash
-    git clone TO_ADD
-    cd TO_ADD
+    git clone [https://github.com/nikodemsokolowski/PL-temperature_and_power_Analyzer.git](https://github.com/nikodemsokolowski/PL-temperature_and_power_Analyzer.git)
+    cd PL-temperature_and_power_Analyzer
     ```
 
-2.  **Create and activate a virtual environment (recommended):**
+2.  **Create and activate a virtual environment:**
     ```bash
     # On Windows
     python -m venv venv
@@ -63,20 +72,10 @@ You can run the application from the source code.
 
 4.  **Run the application:**
     ```bash
-    python main.py
+    python run_app.py
     ```
 
-### Dependencies
-
-The application relies on the following libraries.
-
-```
-customtkinter
-pandas
-numpy
-matplotlib
-scipy
-```
+---
 
 ## 📖 How to Use
 

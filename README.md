@@ -40,6 +40,13 @@ This is the easiest way to run the application without installing Python or any 
 2.  Under the latest release (e.g., `v1.0`), click on `PL_Analyzer.exe` to download it.
 3.  Double-click the downloaded file to run the application.
 
+**Note for Windows Users**
+
+When you first run the application, Windows Defender SmartScreen may show a warning like "Windows protected your PC". This is because the application is from an unrecognized publisher.
+To run the program, simply:
+1. Click on **More info**.
+2. Click the **Run anyway** button.
+
 ### Option 2: Run from Source Code
 This option is for developers or users who want to modify the code.
 

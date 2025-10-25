@@ -39,7 +39,7 @@ Thecoreanalysisfeatureallowsforrobustpower-lawfittingonalog-logscaletodeterminee
 - Magnetic sweep settings dialog supports multiple acquisition time ranges per B-field interval and a sweep-direction selector; configuration persists to `config.json` and is applied during filename parsing.
 - Parser honours both low->high and high->low sweeps while assigning acquisition times from the configured ranges.
 - Temperature Dependence Analysis window now provides dual plots (Arrhenius + intensity vs. T), show/hide toggles, styling controls, in-window integration range editing, and 600 DPI export (PNG/PDF/SVG).
-- Polarization dropdown automatically resets to “All Data” when magnetic data is disabled, keeping the UI in sync with available features.
+- Polarization dropdown automatically resets to "All Data" when magnetic data is disabled, keeping the UI in sync with available features.
 
 ### Magnetic Field Enhancements (Phase 2 Module 2)
 
@@ -54,9 +54,16 @@ Therearetwowaystousethissoftware.Thedirectdownloadisrecommendedformostusers.
 ###Option1:DirectDownload(Recommended)
 ThisistheeasiestwaytoruntheapplicationwithoutinstallingPythonoranydependencies.
 
-1.Gotothe`dist/run_app`folderinthisrepository.
-2.Downloadthe`run_app.exe`file.
-3.Double-clickthedownloadedfiletorunthePLAnalyzer.
+1.  Go to the [**Releases Page**](https://github.com/nikodemsokolowski/PL-temperature_and_power_Analyzer/releases).
+2.  Under the latest release (e.g., `v1.0`), click on `PL_Analyzer.exe` to download it.
+3.  Double-click the downloaded file to run the application.
+
+**Note for Windows Users**
+
+When you first run the application, Windows Defender SmartScreen may show a warning like "Windows protected your PC". This is because the application is from an unrecognized publisher.
+To run the program, simply:
+1. Click on **More info**.
+2. Click the **Run anyway** button.
 
 ###Option2:RunfromSourceCode
 Thisoptionisfordevelopersoruserswhowanttomodifythecode.

@@ -1,13 +1,188 @@
 # Future Improvements & Bug Tracking
 
-**Last Updated**: October 25, 2025  
+**Last Updated**: October 25, 2025 (Updated: Added Issues #1 and #2)  
 **Purpose**: Track bugs, feature requests, and enhancement ideas for PL Analyzer
 
 ---
 
 ## High Priority Bugs
 
-### 1. G-Factor Analysis: Peak Detection "Maximum" Method
+### 1. File Sorting in Dataset: Incorrect Numerical Order
+**Status**: 🐛 Bug - Incorrect Sorting  
+**Priority**: 🔴 Critical (IMPLEMENT FIRST!)  
+**Reported**: October 25, 2025
+
+**Issue**: 
+Files in the dataset table are sorted alphabetically as strings instead of numerically by power/temperature values. This causes incorrect ordering where, for example, 0.100uW appears before 0.050uW.
+
+**Current Behavior**:
+```
+1. PL_0.010uW
+2. PL_0.100uW    ← Wrong! Should be #3
+3. PL_0.050uW    ← Wrong! Should be #2
+```
+
+**Expected Behavior**:
+```
+1. PL_0.010uW
+2. PL_0.050uW
+3. PL_0.100uW
+```
+
+**Impact**:
+- Power series plots show data in wrong order
+- Temperature series plots show data in wrong order
+- Confusing for users analyzing trends
+- May lead to misinterpretation of data
+
+**Root Cause**:
+Likely sorting by filename string rather than by numerical power/temperature values extracted from metadata.
+
+**Requirements for Fix**:
+- Sort datasets by numerical values (power_uw, temperature_k, bfield_t)
+- Primary sort key should depend on series type:
+  - Power series: sort by `power_uw` ascending
+  - Temperature series: sort by `temperature_k` ascending
+  - B-field series: sort by `bfield_t` ascending
+- Secondary sort keys for ties
+- Apply sorting when displaying in file table
+- Apply sorting when plotting series
+
+**Suggested Approach**:
+1. **Locate sorting code**:
+   - Check `pl_analyzer/gui/widgets/file_table.py` for table population
+   - Check `pl_analyzer/gui/actions/plot_actions.py` for series filtering
+
+2. **Implement numerical sorting**:
+   ```python
+   # Current (wrong):
+   datasets.sort(key=lambda d: d.filename)
+   
+   # Fixed (correct):
+   # For power series:
+   datasets.sort(key=lambda d: (d.temperature_k, d.power_uw, d.bfield_t or 0))
+   
+   # For temperature series:
+   datasets.sort(key=lambda d: (d.power_uw, d.temperature_k, d.bfield_t or 0))
+   
+   # For B-field series:
+   datasets.sort(key=lambda d: (d.temperature_k, d.power_uw, d.bfield_t or 0))
+   ```
+
+3. **Apply consistently**:
+   - File table display
+   - Power series plots
+   - Temperature series plots
+   - B-field series plots
+   - All analysis functions that iterate through datasets
+
+**Files to Modify**:
+- `pl_analyzer/gui/widgets/file_table.py` - Table sorting
+- `pl_analyzer/gui/actions/plot_actions.py` - Series filtering and plotting
+- `pl_analyzer/gui/actions/analysis_actions.py` - Analysis functions
+- Possibly `pl_analyzer/core/data_handler.py` - Add sorting helper method
+
+**Testing Checklist**:
+- [ ] Load files with powers: 0.01, 0.1, 0.05, 1, 10 (in any order)
+- [ ] Verify table shows: 0.01, 0.05, 0.1, 1, 10
+- [ ] Plot power series → verify curves appear in correct order
+- [ ] Load files with temps: 5, 50, 10, 100 (in any order)
+- [ ] Verify table shows: 5, 10, 50, 100
+- [ ] Plot temperature series → verify correct order
+
+---
+
+### 2. Integrated Intensity Calculation: Incorrect Values
+**Status**: 🐛 Bug - Wrong Calculation  
+**Priority**: 🔴 High  
+**Reported**: October 25, 2025
+
+**Issue**: 
+The integrated intensity values in Power Dependence Analysis are much too small. For spectra with peak intensity ~4000 counts, the integrated value shows only ~100, which is clearly incorrect.
+
+**Current Behavior**:
+- Peak intensity in spectrum: ~4000 counts
+- Integrated intensity reported: ~100
+- Values are approximately 40× too small
+
+**Expected Behavior**:
+- Integration should return the sum of intensity values across the energy range
+- For a peak with max 4000 and width ~10 points: integral should be ~20,000-40,000 (depending on peak shape)
+
+**Root Cause (Suspected)**:
+The integration function is likely calculating an **average** instead of a **sum**:
+```python
+# Wrong (suspected current implementation):
+integral = np.mean(counts_in_range) * (max_energy - min_energy)
+
+# Correct:
+integral = np.trapz(counts_in_range, energy_in_range)  # or np.sum()
+```
+
+**Impact**:
+- Power law fitting may still work (if consistent) but absolute values are meaningless
+- Cannot compare integrated intensities between different samples/setups
+- Published values would be incorrect
+- User confusion
+
+**Requirements for Fix**:
+- Calculate true integrated intensity (area under curve)
+- Use trapezoidal integration: `np.trapz(y, x)` for better accuracy
+- Or simple sum: `np.sum(counts) * energy_step` if energy grid is uniform
+- Verify units are correct (counts × eV)
+- Test with known Gaussian peak to verify calculation
+
+**Suggested Approach**:
+1. **Locate integration code**:
+   - Check `pl_analyzer/core/analysis.py` 
+   - Look for functions used in Power Dependence Analysis
+   - Likely in `calculate_integrated_intensity()` or similar
+
+2. **Fix calculation**:
+   ```python
+   # Find the buggy code (probably):
+   def integrate_spectrum(energy, counts, e_min, e_max):
+       mask = (energy >= e_min) & (energy <= e_max)
+       return np.mean(counts[mask])  # ← WRONG!
+   
+   # Replace with correct implementation:
+   def integrate_spectrum(energy, counts, e_min, e_max):
+       mask = (energy >= e_min) & (energy <= e_max)
+       energy_range = energy[mask]
+       counts_range = counts[mask]
+       return np.trapz(counts_range, energy_range)  # ← CORRECT
+   ```
+
+3. **Verify in multiple places**:
+   - Power dependence analysis integration
+   - B-field intensity analysis
+   - Any other intensity integration functions
+   - Make sure all use the same correct method
+
+**Files to Modify**:
+- `pl_analyzer/core/analysis.py` - Main integration functions
+- `pl_analyzer/gui/actions/analysis_actions.py` - If integration happens in actions
+- Search codebase for: `integrate`, `integrated_intensity`, `calculate_intensity`
+
+**Testing**:
+1. Create synthetic Gaussian peak:
+   ```python
+   energy = np.linspace(1.5, 1.7, 100)
+   counts = 4000 * np.exp(-((energy - 1.6)**2) / (2 * 0.01**2))
+   # Known analytical integral ≈ 4000 * 0.01 * sqrt(2π) ≈ 100.5
+   ```
+2. Test integration function on synthetic data
+3. Verify result matches expected value
+4. Test on real data and verify values make sense
+
+**Verification**:
+- Integrated intensity should be >> peak height (unless integration range is tiny)
+- Units: counts × eV (if energy in eV)
+- Typical values for good peak: thousands to millions (depending on acquisition time)
+
+---
+
+### 3. G-Factor Analysis: Peak Detection "Maximum" Method
 **Status**: ❌ Not Working  
 **Priority**: 🔴 High  
 **Reported**: October 25, 2025
@@ -44,7 +219,7 @@ The "maximum" peak detection method in g-factor analysis doesn't work correctly.
 
 ---
 
-### 2. G-Factor Analysis: Gaussian Fitting Enhancement
+### 4. G-Factor Analysis: Gaussian Fitting Enhancement
 **Status**: ⚠️ Needs Improvement  
 **Priority**: 🟡 Medium  
 **Reported**: October 25, 2025
@@ -99,9 +274,9 @@ Gaussian fitting for peak position extraction needs intelligent parameter initia
 
 ---
 
-### 3. Intensity Map Color Smoothing
+### 5. Intensity Map Color Smoothing
 **Status**: 📝 Enhancement Request  
-**Priority**: 🟢 Low  
+**Priority**: 🟢 Low
 **Reported**: October 25, 2025
 
 **Issue**: 
@@ -164,9 +339,9 @@ interpolation options: 'none', 'nearest', 'bilinear', 'bicubic',
 
 ---
 
-### 4. Spike Removal UI: Missing Parameter Input Fields
+### 6. Spike Removal UI: Missing Parameter Input Fields
 **Status**: 🐛 Bug - UI Broken  
-**Priority**: 🔴 High  
+**Priority**: 🔴 High
 **Reported**: October 25, 2025
 
 **Issue**: 

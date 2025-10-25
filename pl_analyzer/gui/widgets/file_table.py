@@ -23,17 +23,16 @@ class FileTable(ctk.CTkFrame):
             "temperature_k": {"text": "Temp (K)", "width": 70, "anchor": "center"},
             "power_uw": {"text": "Power (uW)", "width": 80, "anchor": "center"},
             "time_s": {"text": "Time (s)", "width": 60, "anchor": "center"},
-            "gf_present": {"text": "GF", "width": 40, "anchor": "center"}
+            "gf_present": {"text": "GF", "width": 40, "anchor": "center"},
+            "bfield_t": {"text": "B-Field (T)", "width": 80, "anchor": "center"},
+            "polarization": {"text": "Polarization", "width": 90, "anchor": "center"}
         }
 
         # Style for Treeview
         self.style = ttk.Style(self)
-        # TODO: Configure ttk style to match customtkinter theme if possible/needed
-        # self.style.theme_use("default") # Or try other themes
-        # self.style.configure("Treeview", background="#2a2d2e", foreground="white", fieldbackground="#343638", borderwidth=0)
-        # self.style.configure("Treeview.Heading", background="#565b5e", foreground="white", relief="flat")
-        # self.style.map("Treeview", background=[('selected', '#22559b')])
-        # self.style.map("Treeview.Heading", relief=[('active','groove'),('pressed','sunken')])
+        self.style.map("Treeview")
+        self.style.configure("Treeview", rowheight=25)
+        self.style.configure("Treeview.Heading", font=('Calibri', 10,'bold'))
 
         # Create Treeview
         self.tree = ttk.Treeview(
@@ -42,6 +41,8 @@ class FileTable(ctk.CTkFrame):
             show='headings',
             selectmode='extended' # Allows multiple selection
         )
+
+        self.tree.tag_configure('duplicate', background='red')
 
         # Configure headings
         for col_id, col_info in self.columns.items():
@@ -87,6 +88,7 @@ class FileTable(ctk.CTkFrame):
                 dataframe[col_id] = None # Or appropriate default
 
         # Populate table
+        duplicates = dataframe[dataframe.duplicated(['temperature_k', 'power_uw', 'bfield_t', 'polarization'], keep=False)]
         for index, row in dataframe.iterrows():
             values = []
             for col_id in self.columns.keys():
@@ -99,14 +101,18 @@ class FileTable(ctk.CTkFrame):
                 elif isinstance(value, float):
                     # Special formatting for power column
                     if col_id == "power_uw":
-                        display_value = f"{value:.2f}" # Show 2 decimal places for power
+                        display_value = f"{value:.3f}" # Show 3 decimal places for power
                     else:
                         display_value = f"{value:.1f}" # Default to 1 decimal place
                 else:
                     display_value = str(value)
                 values.append(display_value)
 
-            item_id = self.tree.insert('', 'end', values=values)
+            tags = ()
+            if not duplicates.empty and duplicates.apply(lambda x: x.equals(row), axis=1).any():
+                tags = ('duplicate',)
+
+            item_id = self.tree.insert('', 'end', values=values, tags=tags)
             self._item_ids.append(item_id)
 
     def get_selected_file_ids(self) -> list[str]:

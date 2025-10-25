@@ -1,116 +1,161 @@
-# PL-temperature_and_power_Analyzer
-A desktop application for analyzing photoluminescence (PL) spectroscopy data, featuring power- and temperature-dependent series analysis.
+#PL-temperature_and_power_Analyzer
+Adesktopapplicationforanalyzingphotoluminescence(PL)spectroscopydata,featuringpower-andtemperature-dependentseriesanalysis.
 
-PL Analyzer is a desktop application designed for the analysis of photoluminescence (PL) spectroscopy data. It provides a graphical user interface to streamline the process of loading, processing, visualizing, and analyzing temperature- and power-dependent PL spectra, which is common in physics and materials science research.
+PLAnalyzerisadesktopapplicationdesignedfortheanalysisofphotoluminescence(PL)spectroscopydata.Itprovidesagraphicaluserinterfacetostreamlinetheprocessofloading,processing,visualizing,andanalyzingtemperature-andpower-dependentPLspectra,whichiscommoninphysicsandmaterialsscienceresearch.
 
-![PL Analyzer Screenshot](https://github.com/nikodemsokolowski/PL-temperature_and_power_Analyzer/blob/main/fig1.png?raw=true)
+![PLAnalyzerScreenshot](https://github.com/nikodemsokolowski/PL-temperature_and_power_Analyzer/blob/main/fig1.png?raw=true)
 
-The core analysis feature allows for robust power-law fitting on a log-log scale to determine exciton recombination mechanisms.
+Thecoreanalysisfeatureallowsforrobustpower-lawfittingonalog-logscaletodetermineexcitonrecombinationmechanisms.
 
-![Power Law Fitting Screenshot](https://github.com/nikodemsokolowski/PL-temperature_and_power_Analyzer/blob/main/fig2.png?raw=true)
+![PowerLawFittingScreenshot](https://github.com/nikodemsokolowski/PL-temperature_and_power_Analyzer/blob/main/fig2.png?raw=true)
 
-## 🔬 Core Features
+##🔬CoreFeatures
 
-* **Automatic Metadata Parsing**: Extracts experimental parameters (temperature, laser power, acquisition time) directly from filenames, eliminating manual data entry.
-* **Batch Data Processing**: Apply processing steps to all loaded files simultaneously.
-    * **Time Normalization**: Normalize signal counts by acquisition time (counts/s).
-    * **Grey Filter Correction**: Rescale data from files taken with a neutral density (grey) filter.
-    * **Spectrometer Response Correction**: Apply predefined correction factors based on acquisition time.
-* **Interactive Visualization**:
-    * Plot individual spectra or compare multiple datasets.
-    * Automatically plot entire **power-dependent** or **temperature-dependent** series with a single click.
-    * Toggle between linear and **logarithmic scales** for the Y-axis to easily view features at different intensity levels.
-    * Standard plot controls (zoom, pan, save) via the Matplotlib toolbar.
-* **Quantitative Analysis**:
-    * **Spectral Integration**: Calculate the integrated intensity of selected spectra over a user-defined energy range.
-    * **Power Dependence Analysis**: The primary analysis workflow. Automatically integrate a full power series over a specified range, plot the integrated intensity vs. laser power on a **log-log plot**, and fit the data to a power law model ($I = a \cdot P^k$) to determine the exponent `k`.
-* **Data Export**:
-    * Export processed spectra (Energy vs. Counts) to a tab-separated file.
-    * Export integrated intensity vs. power data for a specific series, ready for external plotting or analysis.
+***AutomaticMetadataParsing**:Extractsexperimentalparameters(temperature,laserpower,acquisitiontime)directlyfromfilenames,eliminatingmanualdataentry.
+***BatchDataProcessing**:Applyprocessingstepstoallloadedfilessimultaneously.
+***TimeNormalization**:Normalizesignalcountsbyacquisitiontime(counts/s).
+***GreyFilterCorrection**:Rescaledatafromfilestakenwithaneutraldensity(grey)filter.
+***SpectrometerResponseCorrection**:Applypredefinedcorrectionfactorsbasedonacquisitiontime.
+***InteractiveVisualization**:
+*Plotindividualspectraorcomparemultipledatasets.
+*Automaticallyplotentire**power-dependent**or**temperature-dependent**serieswithasingleclick.
+*Generatea**2Dintensitymap**oftemperature-dependentdata.
+*Togglebetweenlinearand**logarithmicscales**fortheY-axistoeasilyviewfeaturesatdifferentintensitylevels.
+*Standardplotcontrols(zoom,pan,save)viatheMatplotlibtoolbar.
+***QuantitativeAnalysis**:
+***SpectralIntegration**:Calculatetheintegratedintensityofselectedspectraoverauser-definedenergyrange.
+***PowerDependenceAnalysis**:Theprimaryanalysisworkflow.Automaticallyintegrateafullpowerseriesoveraspecifiedrange,plottheintegratedintensityvs.laserpowerona**log-logplot**,andfitthedatatoapowerlawmodel($I=a\cdotP^k$)todeterminetheexponent`k`.
+***TemperatureDependenceAnalysis**:Fittemperature-dependentdatatotheArrheniusmodeltoextractactivationenergies.
+***DataExport**:
+*Exportprocessedspectra(Energyvs.Counts)toatab-separatedfile.
+*Exportintegratedintensityvs.powerdataforaspecificseries,readyforexternalplottingoranalysis.
+***SessionPersistence**:
+*Theapplicationautomaticallysavesthelistofloadedfilesandreloadsthemonthenextstartup.
 
 
-## 🚀 Getting Started & Installation
 
-There are two ways to use this software. The direct download is recommended for most users.
+### Magnetic Field Enhancements (Phase 3)
 
-### Option 1: Direct Download (Recommended)
-This is the easiest way to run the application without installing Python or any dependencies.
+- Magnetic sweep settings dialog supports multiple acquisition time ranges per B-field interval and a sweep-direction selector; configuration persists to `config.json` and is applied during filename parsing.
+- Parser honours both low->high and high->low sweeps while assigning acquisition times from the configured ranges.
+- Temperature Dependence Analysis window now provides dual plots (Arrhenius + intensity vs. T), show/hide toggles, styling controls, in-window integration range editing, and 600 DPI export (PNG/PDF/SVG).
+- Polarization dropdown automatically resets to “All Data” when magnetic data is disabled, keeping the UI in sync with available features.
 
-1.  Go to the `dist/run_app` folder in this repository.
-2.  Download the `run_app.exe` file.
-3.  Double-click the downloaded file to run the PL Analyzer.
+### Magnetic Field Enhancements (Phase 2 Module 2)
 
-### Option 2: Run from Source Code
-This option is for developers or users who want to modify the code.
+- Enhanced integrate-vs-B-field window with simultaneous sigma+, sigma-, and sum traces, optional DCP subplot, styling controls, and CSV export.
+- Advanced g-factor analysis window featuring energy-vs-field plots, Zeeman splitting fit with diagnostics, peak detection modes, smoothing, manual overlays, residuals, and export options.
+- Virtual sigma+ + sigma- sum datasets that behave like normal datasets while tracking their source spectra and supporting refresh.
+
+##🚀GettingStarted&Installation
+
+Therearetwowaystousethissoftware.Thedirectdownloadisrecommendedformostusers.
+
+###Option1:DirectDownload(Recommended)
+ThisistheeasiestwaytoruntheapplicationwithoutinstallingPythonoranydependencies.
+
+1.Gotothe`dist/run_app`folderinthisrepository.
+2.Downloadthe`run_app.exe`file.
+3.Double-clickthedownloadedfiletorunthePLAnalyzer.
+
+###Option2:RunfromSourceCode
+Thisoptionisfordevelopersoruserswhowanttomodifythecode.
 
 **Prerequisites:**
-* Python 3.8 or newer
-* Git
+*Python3.8ornewer
+*Git
 
-**Installation Steps:**
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/nikodemsokolowski/PL-temperature_and_power_Analyzer.git](https://github.com/nikodemsokolowski/PL-temperature_and_power_Analyzer.git)
-    cd PL-temperature_and_power_Analyzer
-    ```
+**InstallationSteps:**
+1.**Clonetherepository:**
+```bash
+gitclone[https://github.com/nikodemsokolowski/PL-temperature_and_power_Analyzer.git](https://github.com/nikodemsokolowski/PL-temperature_and_power_Analyzer.git)
+cdPL-temperature_and_power_Analyzer
+```
 
-2.  **Create and activate a virtual environment:**
-    ```bash
-    # On Windows
-    python -m venv venv
-    .\venv\Scripts\activate
+2.**Createandactivateavirtualenvironment:**
+```bash
+#OnWindows
+python-mvenvvenv
+.\venv\Scripts\activate
 
-    # On macOS/Linux
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
+#OnmacOS/Linux
+python3-mvenvvenv
+sourcevenv/bin/activate
+```
 
-3.  **Install the required packages:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+3.**Installtherequiredpackages:**
+```bash
+pipinstall-rrequirements.txt
+```
 
-4.  **Run the application:**
-    ```bash
-    python run_app.py
-    ```
+4.**Runtheapplication:**
+```bash
+pythonrun_app.py
+```
 
 ---
 
-## 📖 How to Use
+##📖HowtoUse
 
-### 1. File Naming Convention
+###1.FileNamingConvention
 
-For the automatic metadata parsing to work, your data files **must** follow a specific naming convention. The parser is flexible but expects parameters to be delimited by underscores (`_`). **Decimals must be indicated with a 'p'**.
+Fortheautomaticmetadataparsingtowork,yourdatafiles**must**followaspecificnamingconvention.Theparserisflexiblebutexpectsparameterstobedelimitedbyunderscores(`_`).**Decimalsmustbeindicatedwitha'p'**.
 
-**Template:** `Prefix_<Temperature>K_<Power>uW_<Time>s_GF<optional>.csv`
+**Template:**`Prefix_<Temperature>K_<Power>uW_<Time>s_GF<optional>.csv`
 
-**Component Breakdown:**
-* **Prefix**: Any text that does not contain the parameter keys (e.g., `WSe2_SampleA`, `Data`).
-* `<Temperature>K`: The temperature followed by `K`. For decimals, use 'p' (e.g., `5p5K` for 5.5 K).
-* `<Power>uW`: The laser power followed by `uW`. For decimals, use 'p' (e.g., `0p1uW` for 0.1 uW).
-* `<Time>s`: The acquisition time followed by `s`. For decimals, use 'p' (e.g., `0p5s` for 0.5 s).
-* `GF`: An optional tag indicating a grey filter was used. The number following `GF` is ignored; its presence is what matters.
+**ComponentBreakdown:**
+***Prefix**:Anytextthatdoesnotcontaintheparameterkeys(e.g.,`WSe2_SampleA`,`Data`).
+*`<Temperature>K`:Thetemperaturefollowedby`K`.Fordecimals,use'p'(e.g.,`5p5K`for5.5K).
+*`<Power>uW`:Thelaserpowerfollowedby`uW`.Fordecimals,use'p'(e.g.,`0p1uW`for0.1uW).
+*`<Time>s`:Theacquisitiontimefollowedby`s`.Fordecimals,use'p'(e.g.,`0p5s`for0.5s).
+*`GF`:Anoptionaltagindicatingagreyfilterwasused.Thenumberfollowing`GF`isignored;itspresenceiswhatmatters.
 
-**Examples of valid filenames:**
-* `WSe2_H5_K6_run1_5K_10uW_0p1s.csv`
-* `Data_100p5K_50uW_1s_GF1.csv`
-* `measurement_20K_0p2uW_2p5s.dat`
+**Examplesofvalidfilenames:**
+*`WSe2_H5_K6_run1_5K_10uW_0p1s.csv`
+*`Data_100p5K_50uW_1s_GF1.csv`
+*`measurement_20K_0p2uW_2p5s.dat`
 
-### 2. Workflow
+###2.Workflow
 
-1.  **Load Data**: Click the **"Load Files"** button and select all the data files for your experiment. They will appear in the table on the left.
-2.  **Process Data**: In the "Processing Steps" panel, apply corrections as needed. It's recommended to apply them in order:
-    1.  **Normalize by Time**: To get counts per second.
-    2.  **Rescale by GF Factor**: If you used a grey filter. A dialog will ask for the transmission factor (e.g., 0.1 for a 10% filter).
-    3.  **Correct Spectrometer Response**: If you have known correction factors for your setup.
-4.  **Plot Spectra**:
-    * Select one or more files in the table and click **"Plot Selected"**.
-    * To see a full series, select any file from that series and click **"Plot Power Series"** or **"Plot Temp Series"**.
-    * Use the **"Log Y-Axis"** checkbox to toggle the scale.
-5.  **Analyze Power Dependence**:
-    1.  Enter the **Min E (eV)** and **Max E (eV)** for your peak of interest.
-    2.  Select **one** file from the temperature series you want to analyze.
-    3.  Click **"Power Dependence Analysis"**.
-    4.  A new window will open showing the **integrated intensity vs. power** on a log-log plot. Use the "Fit Power Law" button in this new window to perform the fit and extract the exponent `k`.
+1.**LoadData**:Clickthe**"LoadFiles"**buttonandselectallthedatafilesforyourexperiment.Theywillappearinthetableontheleft.
+2.**ProcessData**:Inthe"ProcessingSteps"panel,applycorrectionsasneeded.It'srecommendedtoapplytheminorder:
+1.**NormalizebyTime**:Togetcountspersecond.
+2.**RescalebyGFFactor**:Ifyouusedagreyfilter.Adialogwillaskforthetransmissionfactor(e.g.,0.1fora10%filter).
+3.**CorrectSpectrometerResponse**:Ifyouhaveknowncorrectionfactorsforyoursetup.
+4.**PlotSpectra**:
+*Selectoneormorefilesinthetableandclick**"PlotSelected"**.
+*Toseeafullseries,selectanyfilefromthatseriesandclick**"PlotPowerSeries"**or**"PlotTempSeries"**.
+*Usethe**"LogY-Axis"**checkboxtotogglethescale.
+5.**AnalyzePowerDependence**:
+1.Enterthe**MinE(eV)**and**MaxE(eV)**foryourpeakofinterest.
+2.Select**one**filefromthetemperatureseriesyouwanttoanalyze.
+3.Click**"PowerDependenceAnalysis"**.
+4.Anewwindowwillopenshowingthe**integratedintensityvs.power**onalog-logplot.Usethe"FitPowerLaw"buttoninthisnewwindowtoperformthefitandextracttheexponent`k`.
 
+# PL-temperature_and_power_Analyzer
+## What's New (Plotting & Publication Tools)
+
+- Equalized temperature series with stacked plotting and annotated scale factors (x N).
+- Ultimate Plot Grid: power series at all temperatures as a grid of line plots or intensity maps.
+- Plot Range (eV) for x-axis; applies to single, stacked/equalized and grid plots.
+- Expanded color palettes: viridis, magma, inferno, cividis, twilight, Spectral, coolwarm, RdYlBu, Blues, Reds, etc.
+- Legend controls: per-axes, outside-right, last-only, none; font size and columns.
+- Figure Options: columns, size, DPI, line width, font size, color cycle.
+- Style presets and themes: ticks inside, minor ticks, major/minor tick lengths, axes linewidth; presets (Compact/Nature/APS/Science) and themes (Nature dense, APS two-col, ACS single-col).
+- Subplot title template (e.g., `{T:.0f} K`) with mode (axes/in-axes) and position.
+- Show Grid toggle to hide dashed grid lines.
+- Export current plot to PNG/PDF/SVG with DPI and optional transparent background.
+- Save/Load figure settings (JSON).
+
+### Spike Removal (Advanced)
+
+- Adaptive detector (rolling median + rolling MAD), default ON; robust to NaNs.
+- Detect range (eV) and Skip removal range (eV) to target/avoid regions.
+- Multi-pixel spikes captured via contiguous-segment detection (≤ Max Width).
+- Manual selection expansion via Manual Radius (±N points around clicks).
+- Removal methods: interpolation, local median, NaN, neighbor mean (±N).
+- One-click Auto Remove (with current parameters), multi-level Undo.
+- Review navigation (Prev/Next/Exit) to inspect one curve at a time; “Clean This Curve” + per-curve revert to original.
+- “Show Original” overlays originals (dashed orange) on top of cleaned plots for quick comparison.
+- Sensitivity Sweep (σ) and Prominence threshold removal for batch cleanups.
+- Save/Load spike settings (JSON).
